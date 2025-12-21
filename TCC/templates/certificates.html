@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificados - ISEPAM</title>
+</head>
+<body>
+    <h1>Certificados</h1>
+    <a href="{% url 'home' %}">Voltar ao Início</a>
+
+    <h2>Meus Certificados</h2>
+    {% for cert in certificates %}
+        <div>
+            <p>Evento: {{ cert.event.name }}</p>
+            <p>Data: {{ cert.event.date }}</p>
+            <p>Horas: {{ cert.event.total_hours }}</p>
+            <a href="{% url 'download_certificate' cert.id %}">Baixar PDF</a>
+        </div>
+    {% empty %}
+        <p>Nenhum certificado disponível.</p>
+    {% endfor %}
+</body>
+</html>

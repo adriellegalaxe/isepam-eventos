@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus QR Codes - ISEPAM</title>
+</head>
+<body>
+    <h1>Meus QR Codes</h1>
+    <a href="{% url 'home' %}">Voltar ao Início</a>
+
+    {% for attendance in attendances %}
+        <div>
+            <h3>{{ attendance.session.title }}</h3>
+            <p>Evento: {{ attendance.session.event.name }}</p>
+            <p>Confirmado: {% if attendance.confirmed %}Sim{% else %}Não{% endif %}</p>
+            <img src="{% url 'qr_code_image' attendance.id %}" alt="QR Code">
+        </div>
+    {% empty %}
+        <p>Nenhum QR code disponível.</p>
+    {% endfor %}
+</body>
+</html>
