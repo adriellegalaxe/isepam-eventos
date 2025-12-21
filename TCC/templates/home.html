@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>ISEPAM - Sistema de Eventos</title>
+</head>
+<body>
+    <h1>Bem-vindo ao Sistema de Eventos ISEPAM</h1>
+    {% if user.is_authenticated %}
+        <p>Olá, {{ user.full_name }}!</p>
+        <a href="{% url 'account_logout' %}">Sair</a>
+        <a href="{% url 'certificates' %}">Certificados</a>
+        <a href="{% url 'my_qr_codes' %}">Meus QR Codes</a>
+    {% else %}
+        <a href="{% url 'account_login' %}">Entrar</a>
+        <a href="{% url 'account_signup' %}">Registrar</a>
+    {% endif %}
+
+    <h2>Eventos Recentes</h2>
+    {% for event in recent_events %}
+        <div>
+            <h3>{{ event.name }}</h3>
+            <p>Data: {{ event.date }}</p>
+            <p>Carga Horária: {{ event.total_hours }} horas</p>
+        </div>
+    {% empty %}
+        <p>Nenhum evento recente.</p>
+    {% endfor %}
+
+    <h2>Eventos Disponíveis para Inscrição</h2>
+    {% for event in available_events %}
+        <div>
+            <h3>{{ event.name }}</h3>
+            <p>Data: {{ event.date }}</p>
+            <p>Carga Horária: {{ event.total_hours }} horas</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'register_for_event' event.id %}">Inscrever-se</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Não possui eventos abertos até o momento.</p>
+    {% endfor %}
+</body>
+</html>
