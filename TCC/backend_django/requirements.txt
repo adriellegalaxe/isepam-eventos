@@ -1,0 +1,4 @@
+Django==4.2
+mysql-connector-python==8.0.33
+django-cors-headers==4.2.0
+reportlab==4.0.9

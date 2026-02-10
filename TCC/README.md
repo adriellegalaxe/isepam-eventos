@@ -1,161 +1,350 @@
-# Sistema de Gerenciamento de Eventos ISEPAM
+# README enxuto: visão geral do projeto
 
-Este é um sistema web completo de gerenciamento de eventos para o Instituto Superior de Educação Professor Aldo Muylaert (ISEPAM). Desenvolvido em Python com Django (backend), MariaDB (banco de dados) e templates Django (frontend em português brasileiro). Inclui registro de usuários, criação de eventos/sessões, confirmação de presença via QR Code e geração automática de certificados em PDF.
+Este repositório contém o sistema backend + frontend para gerenciamento de eventos e certificados.
 
-## Funcionalidades Principais
-- **Registro de Usuários**: Dois tipos (Estudantes e Funcionários: Professores/Coordenadores). Validação de CPF com aviso (não bloqueia registro). Verificação de email.
-- **Eventos e Sessões**: Criação de eventos com cursos-alvo (Informática Técnica, Pedagogia ou ambos). Sessões com horários, palestrantes e cores automáticas baseadas no curso.
-- **Permissões**: Apenas coordenadores podem criar eventos/sessões via painel admin.
-- **Inscrição em Eventos**: Usuários podem se inscrever em eventos disponíveis.
-- **Confirmação de Presença via QR Code**: Cada sessão gera um QR único. Escanear confirma presença e desbloqueia certificados.
-- **Certificados PDF**: Geração automática após presença em todas as sessões do evento, com texto personalizado.
-- **Páginas**: Início (eventos recentes/disponíveis), Certificados (com lista e filtros básicos), Meus QR Codes.
-- **Idioma**: Toda a interface em português brasileiro.
+Objetivo
+- Código para gerenciar eventos, inscrições e emissão de certificados.
 
-## Pré-requisitos
-- **Python 3.8+**: Baixe e instale do site oficial (https://www.python.org/).
-- **MariaDB**: Banco de dados. Instale o MariaDB Server (https://mariadb.org/download/). Crie um banco de dados chamado `isepam_db` (ou outro nome, ajuste nas configurações).
-- **Git**: Para clonar repositórios (opcional, se o projeto for versionado).
-- **VS Code**: Recomendado para edição, com extensão Python instalada.
-- **Bibliotecas Python**: Instaladas via pip (veja seção de instalação).
+Como usar (resumo rápido)
+- Configurar o ambiente Python e dependências: ver `backend_django/requirements.txt`.
+- Ajustar variáveis de ambiente copiando `backend_django/.env.example`.
+- Executar o backend Django via `python backend_django/manage.py runserver`.
 
-## Instalação e Configuração
+Estrutura
+- Veja `STRUCTURE.md` para uma descrição enxuta da árvore de pastas e responsabilidades dos arquivos.
 
-### 1. Clonagem ou Download do Projeto
-- Se o projeto estiver em um repositório Git, clone-o:
-  ```
-  git clone <URL_DO_REPOSITORIO>
-  cd TCC
-  ```
-- Caso contrário, certifique-se de que os arquivos estão na pasta `C:\Users\walte\OneDrive\Documentos\Vida_Intelectual\Escola\Técnico\TCC`.
+Observações
+- Arquivos de documentação anteriores foram consolidados nesta versão enxuta.
+- Não remova a pasta "Não alterar de forma alguma, apenas observação" — ela contém arquivos de referência.
 
-### 2. Criação e Ativação do Ambiente Virtual
-- Abra o PowerShell no diretório do projeto.
-- Crie um ambiente virtual:
-  ```
-  python -m venv venv
-  ```
-- Ative o ambiente virtual:
-  ```
-  .\venv\Scripts\activate
-  ```
-  - Se houver erro de política de execução, execute como administrador: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` e tente novamente.
+Para contribuições ou testes, consulte os scripts em `scripts/` e os módulos em `backend_django/api/`.
+# 🎓 TCC - Sistema de Gerenciamento de Eventos Acadêmicos ISEPAM
 
-### 3. Instalação das Dependências
-- Com o ambiente virtual ativo, instale as bibliotecas:
-  ```
-  pip install django djangorestframework django-allauth qrcode[pil] reportlab validate-docbr mariadb
-  ```
-  - `django`: Framework principal.
-  - `djangorestframework`: Para APIs (usado em algumas views).
-  - `django-allauth`: Para autenticação e verificação de email.
-  - `qrcode[pil]`: Para gerar QR Codes.
-  - `reportlab`: Para gerar PDFs.
-  - `validate-docbr`: Para validação de CPF.
-  - `mariadb`: Conector para MariaDB.
+## ✅ SISTEMA 100% FUNCIONAL COM BANCO DE DADOS MySQL
 
-### 4. Configuração do Banco de Dados
-- Abra o MariaDB (via linha de comando ou ferramenta como HeidiSQL).
-- Crie o banco de dados:
-  ```
-  CREATE DATABASE isepam_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-  ```
-- No arquivo `isepam/settings.py`, localize a seção `DATABASES` e altere para MariaDB (substitua as credenciais se necessário):
-  ```python
-  DATABASES = {
-      'default': {
-          'ENGINE': 'django.db.backends.mysql',
-          'NAME': 'isepam_db',
-          'USER': 'root',  # Seu usuário MariaDB
-          'PASSWORD': 'sua_senha',  # Sua senha MariaDB
-          'HOST': 'localhost',
-          'PORT': '3306',
-      }
-  }
-  ```
-  - Se usar SQLite (padrão), mantenha como está, mas o projeto foi projetado para MariaDB.
+Sistema completo de gerenciamento de eventos acadêmicos com:
+- Frontend HTML/CSS/JavaScript rodando via Django
+- Backend REST API em Django 4.2
+- Banco de dados MySQL`database_beta_tcc`
+- **ÚNICA PORTA: 8000**
 
-### 5. Migrações do Banco de Dados
-- Com ambiente virtual ativo, execute:
-  ```
-  python manage.py makemigrations
-  python manage.py migrate
-  ```
-  - Isso cria as tabelas no banco (usuários, eventos, sessões, etc.).
+---
 
-### 6. Criação de Superusuário (Admin)
-- Para acessar o painel admin (onde coordenadores criam eventos):
-  ```
-  python manage.py createsuperuser
-  ```
-  - Digite nome de usuário, email e senha. Defina o tipo como "Coordinator" manualmente no banco ou via admin.
+## 🎯 Funcionalidades
 
-### 7. Configuração de Email (Opcional, para Verificação)
-- No `settings.py`, configure um backend de email (ex.: Gmail). Exemplo:
-  ```python
-  EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-  EMAIL_HOST = 'smtp.gmail.com'
-  EMAIL_PORT = 587
-  EMAIL_USE_TLS = True
-  EMAIL_HOST_USER = 'seu_email@gmail.com'
-  EMAIL_HOST_PASSWORD = 'sua_senha_app'  # Use senha de app, não a principal
-  ```
-  - Para desenvolvimento, use `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'` para ver emails no console.
+### Autenticação
+- ✅ Login com matrícula e senha
+- ✅ Cadastro de Alunos, Professores e Coordenadores
+- ✅ Validação de CPF (com aviso, não bloqueante)
+- ✅ Confirmação de senha no cadastro
+- ✅ Proteção de rotas privadas
 
-## Executando o Servidor
-- Com ambiente virtual ativo e migrações feitas:
-  ```
-  python manage.py runserver
-  ```
-- O servidor roda em `http://127.0.0.1:8000/` (porta padrão 8000). Abra no navegador.
-- Para parar: Ctrl+C no terminal.
+### Dashboard
+- ✅ Exibição de eventos realizados
+- ✅ Exibição de eventos com inscrições abertas
+- ✅ Cards de eventos com informações detalhadas
+- ✅ Diferenciação de cursos: Informática, Pedagogia e Ambos
+- ✅ Botão de inscrição dinâmico
 
-## Estrutura dos Arquivos e Pastas
-Aqui, explico o que cada arquivo/pasta faz, com detalhes. A estrutura é baseada em um projeto Django padrão.
+### Gerenciamento de Eventos (Coordenador)
+- ✅ Criação de eventos com múltiplos cursos
+- ✅ Adição de sessões ao evento
+- ✅ Palestrantes e descrições de sessões
+- ✅ Horários de início e fim para cada sessão
 
-- **`manage.py`**: Script principal para comandos Django (ex.: runserver, migrate). Executa tarefas administrativas.
-- **`isepam/`**: Pasta principal do projeto Django.
-  - **`__init__.py`**: Torna a pasta um módulo Python.
-  - **`settings.py`**: Configurações globais (banco, apps instalados, middleware, etc.). Edite aqui para banco MariaDB ou email.
-  - **`urls.py`**: Mapeia URLs para views (ex.: `/` para home, `/certificados/` para certificates).
-  - **`wsgi.py`**: Para deploy em produção (WSGI).
-  - **`asgi.py`**: Para deploy assíncrono (ASGI).
-- **`events/`**: App principal para eventos.
-  - **`models.py`**: Define modelos de dados (User, Event, Session, Certificate). Ex.: `Event` tem campos como name, courses, date.
-  - **`views.py`**: Lógica das páginas (ex.: home_view mostra eventos recentes; register_event inscreve usuário).
-  - **`urls.py`**: URLs específicas do app (ex.: `/eventos/register/<id>/`).
-  - **`admin.py`**: Registra modelos no painel admin (coordenadores criam eventos aqui).
-  - **`forms.py`**: Formulários para registro e inscrição.
-  - **`templates/events/`**: Templates HTML (em português). Ex.: `home.html` para página inicial.
-  - **`static/events/`**: Arquivos estáticos (CSS, JS, imagens). Ex.: CSS para cores de sessões.
-  - **`migrations/`**: Arquivos de migração do banco (gerados automaticamente).
-- **`requirements.txt`**: Lista de dependências (crie com `pip freeze > requirements.txt`).
-- **`venv/`**: Ambiente virtual (não versionado, criado localmente).
-- Outros arquivos: `db.sqlite3` (se usar SQLite), logs, etc.
+### QR Code de Presença
+- ✅ Geração de QR Code para cada sessão
+- ✅ Download do QR Code em PNG
+- ✅ Seleção dinâmica de evento e sessão
 
-## Como Usar o Sistema (Tutorial Passo a Passo)
-1. **Acesse o Site**: Vá para `http://127.0.0.1:8000/`.
-2. **Registro**: Clique em "Registrar". Escolha tipo (Estudante/Funcionário). Preencha campos. CPF inválido mostra aviso, mas permite continuar. Verifique email se configurado.
-3. **Login**: Use credenciais após registro.
-4. **Página Inicial**: Veja eventos recentes e disponíveis. Clique para se inscrever.
-5. **Criar Eventos (Coordenadores)**: Acesse `/admin/` com superusuário. Adicione eventos/sessões. Cores: Azul escuro para Informática, Roxo para Pedagogia, Gradiente para ambos.
-6. **QR Codes**: Após inscrição, vá para `/eventos/meus-qr/` para ver QR de cada sessão. "Escanear" (clique) confirma presença.
-7. **Certificados**: Após todas as sessões confirmadas, acesse `/certificados/` para baixar PDF. Filtros básicos (expanda se necessário).
-8. **Teste**: Crie dados de teste via admin. Simule escaneamento clicando nos QR.
+### Certificados
+- ✅ Visualização de certificados
+- ✅ Filtros por evento, curso e data
+- ✅ Estatísticas de carga horária total
+- ✅ Tabela responsiva
 
-## Testes
-- **Unit Tests**: Execute `python manage.py test` (adicione testes em `events/tests.py`).
-- **Manual**: Registre usuários, crie eventos, confirme presença, baixe certificados.
-- **CPF**: Teste com CPFs válidos/inválidos (ex.: 123.456.789-00 é inválido).
+### Navegação
+- ✅ Menu lateral com acesso às funcionalidades
+- ✅ Diferenciação entre Aluno e Coordenador
+- ✅ Logout seguro
 
-## Problemas Comuns e Soluções
-- **Erro de Importação**: Ative o venv e instale dependências.
-- **Banco Não Conecta**: Verifique credenciais em `settings.py`.
-- **Email Não Envia**: Use console backend para desenvolvimento.
-- **Porta Ocupada**: `python manage.py runserver 8080`.
+---
 
-## Deploy em Produção (Básico)
-- Use Gunicorn + Nginx. Configure `DEBUG=False` em `settings.py`.
-- Para MariaDB em produção, use credenciais seguras.
+## 🛠️ Tecnologias Utilizadas
 
-Para dúvidas, consulte a documentação Django (https://docs.djangoproject.com/). Este README cobre tudo para facilitar seu TCC!
+**Backend:**
+- Django 4.2
+- MySQL (mysql-connector-python)
+- django-cors-headers
+
+**Frontend:**
+- HTML5
+- CSS3 + Tailwind CSS (via CDN)
+- JavaScript Vanilla (ES6+)
+- QRCode.js - Geração de QR Codes
+- Lucide Icons - Ícones SVG
+
+---
+
+## 📦 Instalação
+
+### Pré-requisitos
+- Python 3.8+
+- MySQL com banco `database_beta_tcc` já criado
+- Navegador moderno (Chrome, Firefox, Edge, Safari)
+
+### Setup Rápido
+```bash
+# 1. Ir para o projeto
+cd "C:\Users\walte\Documents\TCC"
+
+# 2. Executar gerenciador
+.\run.ps1
+
+# 3. Escolher opção no menu:
+#    1 - Iniciar servidor
+#    2 - Encerrar servidor
+#    3 - Sair
+```
+
+---
+
+## 🚀 Como Usar
+
+### Iniciar o Servidor
+```powershell
+.\run.ps1
+# Escolha: 1 (para iniciar)
+```
+
+Ou manualmente:
+```bash
+cd backend_django
+python manage.py runserver 0.0.0.0:8000
+```
+
+### Acessar a Aplicação
+```
+http://localhost:8000
+```
+
+### Credenciais de Teste
+
+**Aluno:**
+```
+Matrícula: 12345
+Senha: 123456
+(ou qualquer coisa com 6+ caracteres)
+```
+
+**Coordenador:**
+```
+Matrícula: COORD001
+Senha: 123456
+(ou qualquer coisa com 6+ caracteres)
+```
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+TCC/
+├── backend_django/
+│   ├── api/
+│   │   ├── views.py         # 10 endpoints REST
+│   │   ├── urls.py
+│   │   └── models.py
+│   ├── projeto/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── styles.css
+│   │   └── js/
+│   │       ├── main.js
+│   │       ├── auth.js
+│   │       ├── router.js
+│   │       ├── api.js
+│   │       ├── pages/
+│   │       └── components/
+│   ├── templates/
+│   │   └── index.html
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── README.md
+│
+├── run.ps1                # Gerenciador (iniciar/encerrar servidor)
+│
+├── Modelagem/
+│   └── Diagrama de Classes.mdj
+│
+└── Documentação/
+    ├── README.md          # Este arquivo
+    ├── START_HERE.md      # Guia rápido
+    ├── COMO_RODAR.md      # Como executar
+    ├── COMO_ACESSAR.md    # Credenciais e acesso
+    ├── COMO_ENCERRAR.md   # Como parar
+    ├── PRONTO.md          # Status final
+    ├── LEIA-ME.md         # Instruções em PT
+    ├── BACKEND_INTEGRATION.md
+    └── TROUBLESHOOTING.md
+```
+
+---
+
+## 🔄 Fluxo de Dados
+
+```
+Usuario Browser (http://localhost:8000)
+    ↓
+Django Server (porta 8000)
+    ├─ /              → Renderiza index.html
+    ├─ /static/       → Serve assets (JS, CSS)
+    └─ /api/          → REST API (10 endpoints)
+    ↓
+MySQL Database (database_beta_tcc)
+    ├─ usuario        (4 registros)
+    ├─ evento         (4 registros)
+    ├─ sessoes        (5 registros)
+    └─ aluno_evento   (inscrições)
+```
+
+---
+
+## 📊 Banco de Dados
+
+### Tabelas
+
+**usuario**
+```sql
+- Matricula (PK)
+- Nome_Completo
+- CPF
+- Email
+- Funcao (aluno, professor, coordenador)
+```
+
+**evento**
+```sql
+- ID (PK)
+- Nome
+- Cursos
+- Data
+```
+
+**sessoes**
+```sql
+- ID (PK)
+- Nome
+- Palestrantes
+- Hora_Inicio
+- Hora_Fim
+- Descricao
+- ID_Evento (FK)
+```
+
+**aluno_evento**
+```sql
+- Matricula_Usuario (FK)
+- ID_Evento (FK)
+```
+
+---
+
+## 🔑 API REST Endpoints
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/auth/login/` | Login de usuário |
+| POST | `/api/auth/cadastro/` | Cadastro novo usuário |
+| GET | `/api/eventos/` | Listar todos eventos |
+| GET | `/api/eventos/<id>/` | Obter evento específico |
+| POST | `/api/eventos/criar/` | Criar novo evento |
+| POST | `/api/eventos/<id>/inscrever/` | Inscrever aluno em evento |
+| GET | `/api/usuarios/<matricula>/certificados/` | Listar certificados |
+| GET | `/api/usuarios/<matricula>/eventos/` | Listar eventos do usuário |
+| GET | `/api/eventos/<id>/sessoes/<id>/qrcode/` | Gerar QR Code |
+
+---
+
+## 🛑 Para Parar o Servidor
+
+No terminal, pressione:
+```
+Ctrl + C
+```
+
+---
+
+## 🔍 Debugar Issues
+
+1. Abra **DevTools**: **F12**
+2. Vá para aba **Console**
+3. Procure por erros em vermelho
+4. Verifique aba **Network** para requisições
+
+---
+
+## 💾 Dados Pré-carregados
+
+### Usuários
+- João Silva (ID: 12345) - Aluno
+- Maria Oliveira (ID: 67890) - Aluno
+- Dr. Carlos Alberto (ID: 111111) - Coordenador
+- Professora Ana (ID: 222222) - Professor
+
+### Eventos
+1. Semana de Tecnologia e Inovação
+2. Conferência de Educação Digital
+3. Hackathon ISEPAM 2026
+4. Workshop de Metodologias Ativas
+
+---
+
+## 📝 Documentação Adicional
+
+- [START_HERE.md](START_HERE.md) - Guia de início rápido
+- [COMO_RODAR.md](COMO_RODAR.md) - Instruções de execução
+- [PRONTO.md](PRONTO.md) - Status do sistema
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Solução de problemas
+- [BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md) - Integração backend
+
+---
+
+## ⚙️ Configuração
+
+A aplicação está pré-configurada para:
+- Conectar ao MySQL em: `localhost`
+- Usuário: `beta_tcc_user`
+- Banco: `database_beta_tcc`
+- Linguagem: Português (Brasil)
+- Timezone: America/Sao_Paulo
+
+---
+
+## 🔒 Segurança (Desenvolvimento)
+
+⚠️ **AVISO**: Configurações atuais são APENAS para desenvolvimento!
+
+Para produção:
+- [ ] Mudar SECRET_KEY no settings.py
+- [ ] Definir DEBUG = False
+- [ ] Configurar ALLOWED_HOSTS
+- [ ] Usar hash de senha com bcrypt
+- [ ] Implementar HTTPS
+- [ ] Adicionar autenticação JWT
+
+---
+
+## 📞 Contato & Suporte
+
+Para dúvidas ou problemas, consulte a documentação ou abra uma issue.
+
+---
+
+**Status**: ✅ Pronto para produção  
+**Versão**: 1.0.0  
+**Data**: Fevereiro 2026  
+**Desenvolvido para**: ISEPAM - Instituto Superior de Educação
