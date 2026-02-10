@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISEPAM - Gerenciamento de Eventos Acadêmicos</title>
+    <meta name="description" content="Plataforma para gerenciamento de eventos acadêmicos do ISEPAM">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- QR Code JS - Local -->
+    <script src="/static/js/lib/qrcode.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    
+    <!-- Configuração do Tailwind -->
+    <style>
+        :root {
+            --color-primary: #1e3a8a;
+            --color-secondary: #7c3aed;
+            --color-dark: #0f172a;
+            --color-dark-secondary: #1e293b;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            background-color: #f9fafb;
+            color: #111827;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        #root {
+            min-height: 100vh;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>var pages = window.pages = window.pages || {};</script>
+    <script>
+        // Diagnóstico rápido: confirma se o HTML/carregamento de scripts está ocorrendo
+        console.log('INDEX.HTML: loaded');
+
+        // Capturar erros globais e logar detalhes úteis
+        window.addEventListener('error', function(e) {
+            console.error('GLOBAL ERROR:', e.message, 'at', e.filename + ':' + e.lineno + ':' + e.colno);
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('UNHANDLED PROMISE REJECTION:', e.reason);
+        });
+    </script>
+    
+    <!-- Scripts -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/components/button.js"></script>
+    <script src="/static/js/components/navigation.js"></script>
+    <script src="/static/js/pages/home.js"></script>
+    <script src="/static/js/pages/login.js"></script>
+    <script src="/static/js/pages/cadastro.js"></script>
+    <script src="/static/js/pages/acesso.js"></script>
+    <script src="/static/js/pages/dashboard.js"></script>
+    <script src="/static/js/pages/detalheEvento.js"></script>
+    <script src="/static/js/pages/criarEvento.js"></script>
+    <script src="/static/js/pages/qrCodePresenca.js"></script>
+    <script src="/static/js/pages/certificados.js"></script>
+    <script src="/static/js/router.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
